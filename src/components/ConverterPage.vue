@@ -7,7 +7,7 @@
             <h2 class="font-['Crimson_Text'] font-semibold text-3xl"> Json </h2>
             <button class="material-symbols-outlined text-[2.5rem] text-[#FF867C]">
               cancel
-            </button>
+            </button> 
           </nav>
           <section class="h-full flex flex-col gap-5 p-10 items-center ">
             <div id="input-editor" class="w-[100%] h-fit min-h-[40%] text-black p-2 bg-white border-[#283146] border-[6px] rounded-xl text-start" contenteditable="true" style="  white-space: pre-wrap; overflow-wrap: break-word;">{"username":"omar5220", "password":"123651"}</div>
