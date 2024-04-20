@@ -1,15 +1,21 @@
 <template>
-  <img alt="Vue logo" src="./assets/logo.png">
-  <HelloWorld msg="Welcome to Your Vue.js App"/>
+  <!-- <img alt="Vue logo" src="./assets/jclass-transparent.png"> -->
+  <div class=" h-screen">
+
+    <NavBar class=" absolute h-[6.0rem] top-0 font-['Londrina_Shadow'] w-full "></NavBar>
+    <ConverterPage class=" w-full h-full pt-[6.0rem] text-white"  msg="Welcome to Your Vue.js App"/>
+  </div>
 </template>
 
 <script>
-import HelloWorld from './components/HelloWorld.vue'
+import ConverterPage from './components/ConverterPage.vue'
+import NavBar from './components/NavBar.vue'
 
 export default {
   name: 'App',
   components: {
-    HelloWorld
+    ConverterPage,
+    NavBar
   }
 }
 </script>
@@ -21,6 +27,6 @@ export default {
   -moz-osx-font-smoothing: grayscale;
   text-align: center;
   color: #2c3e50;
-  margin-top: 60px;
+  
 }
 </style>
