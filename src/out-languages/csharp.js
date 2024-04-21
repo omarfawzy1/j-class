@@ -11,7 +11,8 @@ function transform(intermediate, className){
         "DateOnly":"DateOnly",
         "DateTime":"DateTime",
         "Float":"float",
-        "Boolean" : "bool"
+        "Boolean" : "bool",
+        "Object" : "dynamic"
     }
 
 
