@@ -1,9 +1,9 @@
 <template>
   <!-- <img alt="Vue logo" src="./assets/jclass-transparent.png"> -->
-  <div class=" h-screen">
+  <div class=" h-screen " :class="{ dark: this.isDark}">
 
-    <NavBar class=" absolute h-[6.0rem] top-0 font-['Londrina_Shadow'] w-full "></NavBar>
-    <ConverterPage class=" w-full h-full pt-[6.0rem] text-white"  msg="Welcome to Your Vue.js App"/>
+    <NavBar class=" absolute h-[6.0rem] top-0 font-['Londrina_Shadow'] w-full " @changeDarkMode="changeDarkMode"></NavBar>
+    <ConverterPage class="w-full h-full pt-[6.0rem] text-white" ></ConverterPage>
   </div>
 </template>
 
@@ -16,6 +16,18 @@ export default {
   components: {
     ConverterPage,
     NavBar
+  },
+  data(){
+    return {
+      isDark : false
+    }
+  }
+  ,
+  methods: {
+    changeDarkMode(){
+      this.isDark = !this.isDark;
+      console.log("Dark mode changed")
+    }
   }
 }
 </script>

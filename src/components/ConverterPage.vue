@@ -1,28 +1,27 @@
 <template> 
-    
-    <div  class="bged w-full h-full bg-cover" style="background-image: url('light-bg.jpg');">
+    <div  class="bged w-full h-full bg-cover bg-light-background dark:bg-dark-background transition-all duration-500">
       <div class="flex flex-row items-center justify-center h-full gap-10">
-        <div class="flex flex-col  w-[40%] min-h-[85%] bg-gradient-to-t from-[#8BA4C7] to-[#E3E9F2] border-[#283146] border-[6px] rounded-xl">
-          <nav class="h-16 bg-[#3D4A6C] border-[#283146] border-b-[6px] flex justify-between px-10 items-center">
+        <div class="flex flex-col  w-[40%] min-h-[85%] bg-gradient-to-t from-[#8BA4C7] to-[#E3E9F2] dark:from-[#454444] dark:to-[#454444] transition-all duration-500  border-[#283146] border-[6px] rounded-xl">
+          <nav class="h-16 bg-[#3D4A6C] dark:bg-[#332D2D] transition-colors duration-500 border-[#283146] border-b-[6px] flex justify-between px-10 items-center">
             <h2 class="font-['Crimson_Text'] font-semibold text-3xl"> Json </h2>
-            <button class="material-symbols-outlined text-[2.5rem] text-[#FF867C]">
+            <button @click="clearInput" class="material-symbols-outlined text-[2.5rem] text-[#FF867C]">
               cancel
             </button> 
           </nav>
           <section class="h-full flex flex-col gap-5 p-10 items-center ">
-            <div id="input-editor" class="w-[100%] h-fit min-h-[40%] text-black p-2 bg-white border-[#283146] border-[6px] rounded-xl text-start" contenteditable="true" style="  white-space: pre-wrap; overflow-wrap: break-word;">{"username":"omar5220", "password":"123651"}</div>
+            <div id="input-editor" v-text="inputEditor" class="w-[100%] h-fit min-h-[40%] text-black p-2 bg-white dark:bg-[#1E1E1E] dark:text-white transition-colors duration-500 border-[#283146] border-[6px] rounded-xl text-start" contenteditable="true" style="  white-space: pre-wrap; overflow-wrap: break-word;"></div>
           </section>
         </div>
-        <div class="flex flex-col  w-[40%] min-h-[85%] bg-gradient-to-t from-[#8BA4C7] to-[#E3E9F2] border-[#283146] border-[6px] rounded-xl">
-          <nav class="h-16 bg-[#3D4A6C] border-[#283146] border-b-[6px] flex justify-between px-10 items-center">
+        <div class="flex flex-col  w-[40%] min-h-[85%] bg-gradient-to-t from-[#8BA4C7] to-[#E3E9F2] dark:from-[#454444] dark:to-[#454444] transition-all duration-500 border-[#283146] border-[6px] rounded-xl">
+          <nav class="h-16 bg-[#3D4A6C] dark:bg-[#332D2D] transition-colors duration-500 border-[#283146] border-b-[6px] flex justify-between px-10 items-center">
             <h2 class="font-['Crimson_Text'] font-semibold text-3xl"> Csharp </h2>
-            <button class="material-symbols-outlined text-[2.5rem] text-[#FF867C]">
+            <button  class="material-symbols-outlined text-[2.5rem] text-[#FF867C]">
               cancel
             </button>
           </nav>
           <section class="h-full flex flex-col gap-5 p-10 items-center ">
-            <div id="output-editor" class="w-[100%] h-fit min-h-[40%] text-black p-2 bg-white border-[#283146] border-[6px] rounded-xl text-start" contenteditable="true" style="  white-space: pre-wrap; overflow-wrap: break-word;"> {{ code }}</div>
-
+            <div id="output-editor" class="w-[100%] h-fit min-h-[40%] text-black p-2 bg-white dark:bg-[#1E1E1E] dark:text-white transition-colors duration-500 border-[#283146] border-[6px] rounded-xl text-start" contenteditable="true" style="  white-space: pre-wrap; overflow-wrap: break-word;"> {{ code }}</div>
+                
           </section>
         </div>
 
@@ -37,13 +36,13 @@ import csharpTransformer from "../out-languages/csharp"
 export default {
   name: 'ConverterPage',
   props: {
-    msg: String
   },
   data() {
     return {
       jsonFormatValidationStack: [],
       isValid : true,
-      code: ""
+      code: "",
+      inputEditor : `{"username": "omar", "password": "1234"}`
     };
   },
   mounted() {
@@ -74,8 +73,7 @@ export default {
     },
     onStart() {
       var editor = document.getElementById('input-editor');
-      // var getCaretPosition = this.getCaretPosition;
-      // var setCaretPosition = this.setCaretPosition;
+
       editor.addEventListener("paste", function(e) {
           // cancel paste
           e.preventDefault();
@@ -138,7 +136,10 @@ export default {
       this.code = csharpTransformer(result, "SomeClass")
       console.log(this.code)
 
-    }
+    },
+    clearInput(){
+      this.inputEditor = ""
+    },
   }
 }
 </script>
