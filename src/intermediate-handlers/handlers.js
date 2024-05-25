@@ -28,6 +28,10 @@ function StringHandler(text){
     return "String"
 }
 
+function NullHandler(){
+    return "Object"
+}
+
 function checkDateString(input) {
     const dateOnlyPattern = /^\d{4}-\d{2}-\d{2}$/; // Matches YYYY-MM-DD
     const dateTimePattern = /^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}(?:\.\d+)?(?:Z|[+-]\d{2}:\d{2})?$/; // Matches YYYY-MM-DDTHH:MM:SS and variants
@@ -44,5 +48,6 @@ function checkDateString(input) {
 export default {
     "boolean" : BooleanHandler,
     "number" : NumberHandler,
-    "string" : StringHandler 
+    "string" : StringHandler,
+    "object" : NullHandler
 };
