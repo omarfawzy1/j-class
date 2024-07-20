@@ -130,7 +130,7 @@ export default {
    
 
         if(this.ValidJson(text)){
-          this.ConvertToTypescript(text)
+          this.ConvertToSelectedLanguage(text)
         }
         
       });
