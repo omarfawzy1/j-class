@@ -14,7 +14,12 @@
         </div>
         <div class="flex flex-col  w-[40%] min-h-[85%] bg-gradient-to-t from-[#8BA4C7] to-[#E3E9F2] dark:from-[#454444] dark:to-[#454444] transition-all duration-500 border-[#283146] border-[6px] rounded-xl">
           <nav class="h-16 bg-[#3D4A6C] dark:bg-[#332D2D] transition-colors duration-500 border-[#283146] border-b-[6px] flex justify-between px-10 items-center">
-            <h2 class="font-['Crimson_Text'] font-semibold text-3xl"> Csharp </h2>
+            <select @change="onConverterChange" v-model="selectedOutputLang" class="font-['Crimson_Text'] font-semibold text-3xl bg-[#3D4A6C]">
+              <option class="bg-opacity-0" v-for="option in outputLangOptions" v-bind:value="option.value" v-bind:key="option.value" >
+                {{ option.text }}
+              </option>
+            </select>
+            
             <button  class="material-symbols-outlined text-[2.5rem] text-[#FF867C]">
               cancel
             </button>
@@ -33,6 +38,7 @@
 <script>
 import handlers from "../intermediate-handlers/handlers"
 import csharpTransformer from "../out-languages/csharp"
+import typescriptTransformer from "../out-languages/typescript"
 import Prism from 'prismjs';
 import 'prismjs/components/prism-json';
 import 'prismjs/components/prism-csharp';
@@ -51,7 +57,12 @@ export default {
       jsonFormatValidationStack: [],
       isValid : true,
       code: "",
-      inputEditor : `{"username": "omar", "password": "1234"}`
+      inputEditor : `{"username": "omar", "password": "1234"}`,
+      outputLangOptions: [
+        {value: 0, text:"TypeScript", converter: typescriptTransformer},
+        {value: 1, text:"Csharp", converter: csharpTransformer}
+      ],
+      selectedOutputLang: 0
     };
   },
   mounted() {
@@ -85,14 +96,21 @@ export default {
     onInputBlur(){
       Prism.highlightElement(document.getElementById("input-editor"))
     },
+    onConverterChange(){
+      var editor = document.getElementById('input-editor');
+      var text = editor.innerText;
+
+      if(this.ValidJson(text)){
+        this.ConvertToSelectedLanguage(text)
+      }
+    },
     onStart() {
       var editor = document.getElementById('input-editor');
-
+      // this.selectedOutputLang = this.outputLangOptions[0]
+      console.log(this.selectedOutputLang);
       editor.addEventListener("paste", function(e) {
           // cancel paste
           e.preventDefault();
-
-          // get text representation of clipboard
           var text = (e.originalEvent || e).clipboardData.getData('text/plain');
 
           // insert text manually
@@ -112,7 +130,7 @@ export default {
    
 
         if(this.ValidJson(text)){
-          this.ConvertToCSharp(text)
+          this.ConvertToTypescript(text)
         }
         
       });
@@ -155,6 +173,31 @@ export default {
       console.log(this.code)
 
     },
+    ConvertToSelectedLanguage(jsonString){
+      var result = this.ConvertToIntermediate(jsonString)
+      console.log(this.selectedOutputLang);
+      let converter = this.outputLangOptions.find(x => x.value == this.selectedOutputLang).converter
+      
+      this.code = converter(result, "SomeClass")
+      
+      let out = document.getElementById("output-editor")
+      out.innerHTML = this.code
+      Prism.highlightElement(out)
+      console.log(this.code)
+
+    },
+    ConvertToTypescript(jsonString){
+      console.log("Converting to typescript" + jsonString)
+      var result = this.ConvertToIntermediate(jsonString)
+
+      this.code = typescriptTransformer(result, "SomeClass")
+      
+      let out = document.getElementById("output-editor")
+      out.innerHTML = this.code
+      Prism.highlightElement(out)
+      console.log(this.code)
+
+    },
     clearInput(){
       this.inputEditor = ""
     },
@@ -164,148 +207,5 @@ export default {
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
-/**
- * atom-dark theme for `prism.js`
- * Based on Atom's `atom-dark` theme: https://github.com/atom/atom-dark-syntax
- * @author Joe Gibson (@gibsjose)
- */
-
- code[class*="language-"],
-pre[class*="language-"] {
-	color: #c5c8c6;
-	text-shadow: 0 1px rgba(0, 0, 0, 0.3);
-	font-family: Inconsolata, Monaco, Consolas, 'Courier New', Courier, monospace;
-	direction: ltr;
-	text-align: left;
-	white-space: pre;
-	word-spacing: normal;
-	word-break: normal;
-	line-height: 1.5;
-
-	-moz-tab-size: 4;
-	-o-tab-size: 4;
-	tab-size: 4;
-
-	-webkit-hyphens: none;
-	-moz-hyphens: none;
-	-ms-hyphens: none;
-	hyphens: none;
-}
-
-/* Code blocks */
-pre[class*="language-"] {
-	padding: 1em;
-	margin: .5em 0;
-	overflow: auto;
-	border-radius: 0.3em;
-}
-
-:not(pre) > code[class*="language-"],
-pre[class*="language-"] {
-	background: #1d1f21;
-}
-
-/* Inline code */
-:not(pre) > code[class*="language-"] {
-	padding: .1em;
-	border-radius: .3em;
-}
-
-.token.comment,
-.token.prolog,
-.token.doctype,
-.token.cdata {
-	color: #7C7C7C;
-}
-
-.token.punctuation {
-	color: #c5c8c6;
-}
-
-.namespace {
-	opacity: .7;
-}
-
-.token.property,
-.token.keyword,
-.token.tag {
-	color: #96CBFE;
-}
-
-.token.class-name {
-	color: #FFFFB6;
-	text-decoration: underline;
-}
-
-.token.boolean,
-.token.constant {
-	color: #99CC99;
-}
-
-.token.symbol,
-.token.deleted {
-	color: #f92672;
-}
-
-.token.number {
-	color: #FF73FD;
-}
-
-.token.selector,
-.token.attr-name,
-.token.string,
-.token.char,
-.token.builtin,
-.token.inserted {
-	color: #A8FF60;
-}
-
-.token.variable {
-	color: #C6C5FE;
-}
-
-.token.operator {
-	color: #EDEDED;
-}
-
-.token.entity {
-	color: #FFFFB6;
-	cursor: help;
-}
-
-.token.url {
-	color: #96CBFE;
-}
-
-.language-css .token.string,
-.style .token.string {
-	color: #87C38A;
-}
-
-.token.atrule,
-.token.attr-value {
-	color: #F9EE98;
-}
-
-.token.function {
-	color: #DAD085;
-}
-
-.token.regex {
-	color: #E9C062;
-}
-
-.token.important {
-	color: #fd971f;
-}
-
-.token.important,
-.token.bold {
-	font-weight: bold;
-}
-
-.token.italic {
-	font-style: italic;
-}
 
 </style>
