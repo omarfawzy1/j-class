@@ -57,7 +57,7 @@ export default {
       jsonFormatValidationStack: [],
       isValid : true,
       code: "",
-      inputEditor : `{"username": "omar", "password": "1234"}`,
+      inputEditor : `{"username": "omar", "password": {"asd":[{"Adfd":"sad"}]}}  `,
       outputLangOptions: [
         {value: 0, text:"TypeScript", converter: typescriptTransformer},
         {value: 1, text:"Csharp", converter: csharpTransformer}
@@ -150,10 +150,11 @@ export default {
       
       var result = []
       for(const key in variable){
-        console.log("Converting to intermediate " + key + " " + variable[key] + " " + typeof variable[key] + " " + handlers[typeof variable[key]](variable[key])) 
+        console.log("Converting to intermediate " + key + " " + variable[key] + " " + typeof variable[key])
+        console.log(handlers[typeof variable[key]](variable[key], key)); 
         result.push({
           key: key,
-          type: handlers[typeof variable[key]](variable[key]),
+          type: handlers[typeof variable[key]](variable[key], key),
           value: variable[key]
         }) 
       }

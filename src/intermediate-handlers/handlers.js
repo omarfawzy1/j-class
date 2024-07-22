@@ -1,11 +1,16 @@
+/* eslint-disable no-debugger */
+function capitalizeFirstLetter(string) {
+    return string.charAt(0).toUpperCase() + string.slice(1);
+}
+
 
 function BooleanHandler(){
-    console.log("Boolean handling")
+    //console.log("Boolean handling")
     return {type:"Boolean"};
 }
 
 function NumberHandler(number){
-    console.log("Number handling " + number)
+    //console.log("Number handling " + number)
 
     var text = number.toString();
     if(!text.includes('.')){
@@ -28,26 +33,43 @@ function StringHandler(text){
     return {type:"String"}
 }
 
-function ObjectHandler(object){
-    if(Array.isArray(object)){
+// incase of finding a multiple objects inside each other we will dfs it using recurssion
+// and will return an object containing the following the name of the class as an itermidiate object
+// 
+
+function ObjectHandler(object, key){
+    if(Array.isArray(object)){ // in case its an array 
+        console.log(`${key} is an array`)
         let innerTypes = []
         for(let key in object){
-            let type = handlers[typeof object[key]](object[key]).type
-            if(type == "Object")
-                type = convertObjectToIntermediate(object[key]).type
+            let type = {type:handlers[typeof object[key]](object[key], key)}
+            debugger
+            if(type.type.type == "Custom")
+                type = convertObjectToIntermediate(object[key])
             innerTypes.push(type)
         }
+        
+        //debugger;
         let allSame = true;
         for(let type of innerTypes){
-            allSame = allSame && (type == innerTypes[0]) 
+            allSame = allSame && (type.type == innerTypes[0].type) 
         }
-        console.log("innerTypes " + innerTypes[0] + " all same = " + allSame )
+        console.log("innerTypes " + innerTypes[0].type + " all same = " + allSame )
+        if(innerTypes[0].type == 'Custom'){
+            return {type:"Custom Array", customType: innerTypes[0], value:object[key], name:capitalizeFirstLetter("SomeOtherClass")}
+        }
+
         if(allSame)
             return {type:"Array", innerType:innerTypes[0]}
+        
+
+
         return {type:"Array", innerType:"Object"} 
     }
-
-    return {type:"Object"}
+    console.log(`The ${key} is currently a custom class`)
+    //Custom Type
+    return {type:"Custom", customType: convertObjectToIntermediate(object), value:object[key], name:capitalizeFirstLetter(key)}
+    //return {type:"Object"}
 }
 
 function checkDateString(input) {
@@ -62,15 +84,18 @@ function checkDateString(input) {
         return  "Invalid format";
     }
 }
+// function mergeTypes(){
+
+// }
 
 function convertObjectToIntermediate(object){
     
     var result = []
     for(const key in object){
-      console.log("Converting to Object intermediate " + key + " " + object[key] + " " + typeof object[key] + " " + handlers[typeof object[key]](object[key]).type) 
+      console.log("Converting to Object intermediate " + key + " " + object[key] + " " + typeof object[key] + " " + handlers[typeof object[key]](object[key],key).type) 
       result.push({
         key: key,
-        type: handlers[typeof object[key]](object[key]).type,
+        type: handlers[typeof object[key]](object[key],key),
         value: object[key]
       }) 
     }
